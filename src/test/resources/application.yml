@@ -1,0 +1,33 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+
+  flyway:
+    enabled: false
+
+  security:
+    user:
+      name: test
+      password: test
+
+file:
+  upload-dir: uploads/videos
+
+toss:
+  client-key: test_ck_dummy
+  secret-key: test_sk_dummy
+
+jwt:
+  secret: ZGV2Y2xhc3Mtand0LXNlY3JldC1rZXktZm9yLXAyLWltcGxlbWVudGF0aW9uLTIwMjY=
+  expiration-ms: 604800000
