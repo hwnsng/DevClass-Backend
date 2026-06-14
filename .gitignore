@@ -1,0 +1,11 @@
+**/node_modules/
+**/.next/
+**/build/
+**/.gradle/
+**/*.tsbuildinfo
+**/.env
+**/.env.local
+**/uploads/
+**/hs_err_pid*.log
+P2/
+.release/

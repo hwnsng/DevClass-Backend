@@ -1,0 +1,65 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: devclass-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root1234}
+      MYSQL_DATABASE: devclass_p3
+      MYSQL_USER: ${DB_USER:-devclass}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-devclass1234}
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: devclass-server
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/devclass_p3?useSSL=false&serverTimezone=Asia/Seoul&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: ${DB_USER:-devclass}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-devclass1234}
+      JWT_SECRET: ${JWT_SECRET}
+      TOSS_CLIENT_KEY: ${TOSS_CLIENT_KEY}
+      TOSS_SECRET_KEY: ${TOSS_SECRET_KEY}
+      SPRING_MAIL_USERNAME: ${MAIL_USERNAME}
+      SPRING_MAIL_PASSWORD: ${MAIL_PASSWORD}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost:3000}
+      FILE_UPLOAD_DIR: /app/uploads
+      PAYMENT_WEBHOOK_SECRET: ${PAYMENT_WEBHOOK_SECRET:-}
+    ports:
+      - "8080:8080"
+    volumes:
+      - uploads:/app/uploads
+
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8080/api}
+    container_name: devclass-client
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "3000:3000"
+
+volumes:
+  db_data:
+  uploads:
