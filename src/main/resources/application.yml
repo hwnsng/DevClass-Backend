@@ -74,9 +74,6 @@ jwt:
   secret: ${JWT_SECRET:ZGV2Y2xhc3Mtand0LXNlY3JldC1rZXktZm9yLXAzLWltcGxlbWVudGF0aW9uLTIwMjY=}
   expiration-ms: 604800000
 
-discord:
-  webhook-url: ${DISCORD_WEBHOOK_URL:}
-
 app:
   base-url: ${APP_BASE_URL:http://localhost:3000}
 

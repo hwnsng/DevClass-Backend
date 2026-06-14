@@ -6,7 +6,6 @@ import com.hwnsng.devclass.course.entity.Course;
 import com.hwnsng.devclass.course.repository.CourseRepository;
 import com.hwnsng.devclass.course.dto.CourseListResponse;
 import com.hwnsng.devclass.enrollment.repository.EnrollmentRepository;
-import com.hwnsng.devclass.external.DiscordWebhookService;
 import com.hwnsng.devclass.external.EmailService;
 import com.hwnsng.devclass.notification.service.NotificationService;
 import com.hwnsng.devclass.payment.entity.PaymentItem;
@@ -40,7 +39,6 @@ public class AdminController {
     private final NotificationService notificationService;
     private final UserRepository userRepository;
     private final EmailService emailService;
-    private final DiscordWebhookService discordService;
     private final PaymentItemRepository paymentItemRepository;
     private final TossPaymentClient tossPaymentClient;
     private final CourseRepository courseRepository;
@@ -112,9 +110,6 @@ public class AdminController {
                 }
             });
         });
-
-        // Discord 알림
-        discordService.sendCourseDeleted(finalTitle, reason);
 
         // 강의 삭제
         courseService.deleteCourse(courseId);

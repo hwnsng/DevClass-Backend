@@ -2,7 +2,6 @@ package com.hwnsng.devclass.scheduler;
 
 import com.hwnsng.devclass.course.entity.Course;
 import com.hwnsng.devclass.course.repository.CourseRepository;
-import com.hwnsng.devclass.external.DiscordWebhookService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -23,7 +22,6 @@ public class DevClassScheduler {
     private final CourseRepository courseRepository;
     private final PopularCourseSnapshotRepository snapshotRepository;
     private final JobRunRepository jobRunRepository;
-    private final DiscordWebhookService discordService;
 
     /**
      * 매주 월요일 오전 2시 - 인기 강의 스냅샷 저장
@@ -46,13 +44,11 @@ public class DevClassScheduler {
             run.success(msg);
             jobRunRepository.save(run);
             log.info("[Scheduler] popular-course-aggregation: {}", msg);
-            discordService.sendSchedulerResult("popular-course-aggregation", "SUCCESS", msg);
 
         } catch (Exception e) {
             run.fail(e.getMessage());
             jobRunRepository.save(run);
             log.error("[Scheduler] popular-course-aggregation failed: {}", e.getMessage());
-            discordService.sendSchedulerResult("popular-course-aggregation", "FAIL", e.getMessage());
         }
     }
 

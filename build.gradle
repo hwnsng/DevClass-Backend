@@ -49,7 +49,7 @@ dependencies {
 	// Structured logging (JSON)
 	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
 
-	// HTTP client for Toss/Discord webhooks
+	// HTTP client for Toss Payments
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
 	// Lombok

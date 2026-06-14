@@ -1,7 +1,6 @@
 package com.hwnsng.devclass.subscription.service;
 
 import com.hwnsng.devclass.common.exception.CustomException;
-import com.hwnsng.devclass.external.DiscordWebhookService;
 import com.hwnsng.devclass.external.EmailService;
 import com.hwnsng.devclass.notification.service.NotificationService;
 import com.hwnsng.devclass.subscription.entity.Subscription;
@@ -26,7 +25,6 @@ public class SubscriptionService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final EmailService emailService;
-    private final DiscordWebhookService discordService;
 
     @Transactional
     public void subscribe(Long userId, Long instructorId) {
@@ -49,7 +47,7 @@ public class SubscriptionService {
     }
 
     /**
-     * 신규 강의 등록 시 구독자에게 알림/이메일/Discord 발송
+     * 신규 강의 등록 시 구독자에게 앱 알림과 이메일 발송
      */
     @Async
     @Transactional(readOnly = true)
@@ -71,8 +69,6 @@ public class SubscriptionService {
             );
         });
 
-        // Discord 알림 (1회)
-        discordService.sendCourseCreated(courseTitle, instructorName);
 
         log.info("New course notification sent to {} subscribers for course '{}'",
                 subscriberIds.size(), courseTitle);
