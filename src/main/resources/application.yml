@@ -1,0 +1,96 @@
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/devclass_p3?serverTimezone=Asia/Seoul&characterEncoding=UTF-8}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:1234}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      leak-detection-threshold: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    baseline-version: 0
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 500MB
+      max-request-size: 510MB
+
+  mvc:
+    contentnegotiation:
+      media-types:
+        mp4: video/mp4
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:devclass.noreply@gmail.com}
+    password: ${MAIL_PASSWORD:replace_me}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+logging:
+  level:
+    com.hwnsng.devclass: INFO
+    org.flywaydb: INFO
+    org.springframework.security: WARN
+    org.hibernate: WARN
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+server:
+  port: 8080
+  forward-headers-strategy: framework
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR:./uploads/videos}
+
+toss:
+  client-key: ${TOSS_CLIENT_KEY:test_ck_D5GePWvyJnrK0W0k6q8gLzN97E0lXely}
+  secret-key: ${TOSS_SECRET_KEY:test_sk_D5GePWvyJnrK0W0k6q8gLzN97E0lXely}
+
+jwt:
+  secret: ${JWT_SECRET:ZGV2Y2xhc3Mtand0LXNlY3JldC1rZXktZm9yLXAzLWltcGxlbWVudGF0aW9uLTIwMjY=}
+  expiration-ms: 604800000
+
+discord:
+  webhook-url: ${DISCORD_WEBHOOK_URL:}
+
+app:
+  base-url: ${APP_BASE_URL:http://localhost:3000}
+
+webhook:
+  payment-secret: ${PAYMENT_WEBHOOK_SECRET:}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: when_authorized
+  metrics:
+    tags:
+      application: devclass-p3

@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface PaymentItemRepository extends JpaRepository<PaymentItem, Long> {
     List<PaymentItem> findByPaymentIdAndStatus(Long paymentId, PaymentItemStatus status);
+    List<PaymentItem> findByCourseIdAndStatus(Long courseId, PaymentItemStatus status);
 }
