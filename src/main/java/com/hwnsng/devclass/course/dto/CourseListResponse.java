@@ -13,6 +13,7 @@ public class CourseListResponse {
     private final Integer studentCount;
     private final LocalDate createdAt;
     private final String thumbnailUrl;
+    private final String status;
 
     public CourseListResponse(Course course) {
         this.courseId = course.getId();
@@ -24,5 +25,6 @@ public class CourseListResponse {
         this.thumbnailUrl = course.getThumbnailUrl() != null
                 ? "http://localhost:8080/uploads/" + course.getThumbnailUrl()
                 : null;
+        this.status = course.getStatus().name();
     }
 }

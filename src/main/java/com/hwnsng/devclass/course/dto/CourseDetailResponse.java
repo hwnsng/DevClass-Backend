@@ -17,6 +17,7 @@ public class CourseDetailResponse {
     private final Integer studentCount;
     private final LocalDate createdAt;
     private final String thumbnailUrl;
+    private final String status;
     private final List<LessonSummary> lessons;
 
     public CourseDetailResponse(Course course) {
@@ -31,6 +32,7 @@ public class CourseDetailResponse {
         this.thumbnailUrl = course.getThumbnailUrl() != null
                 ? "http://localhost:8080/uploads/" + course.getThumbnailUrl()
                 : null;
+        this.status = course.getStatus().name();
         this.lessons = course.getLessons().stream().map(LessonSummary::new).toList();
     }
 

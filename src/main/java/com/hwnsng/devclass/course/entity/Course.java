@@ -33,6 +33,10 @@ public class Course {
     @Column(name = "student_count")
     private Integer studentCount = 0;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private CourseStatus status = CourseStatus.PENDING;
+
     private String thumbnailUrl;
 
     private LocalDateTime createdAt;
@@ -87,5 +91,17 @@ public class Course {
     // 리뷰 평균 평점 갱신
     public void updateRating(double ratingAvg) {
         this.ratingAvg = ratingAvg;
+    }
+
+    public void publish() {
+        this.status = CourseStatus.PUBLISHED;
+    }
+
+    public void hide() {
+        this.status = CourseStatus.HIDDEN;
+    }
+
+    public enum CourseStatus {
+        PENDING, PUBLISHED, HIDDEN
     }
 }
