@@ -77,9 +77,6 @@ jwt:
 app:
   base-url: ${APP_BASE_URL:http://localhost:3000}
 
-webhook:
-  payment-secret: ${PAYMENT_WEBHOOK_SECRET:}
-
 management:
   endpoints:
     web:

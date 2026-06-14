@@ -53,6 +53,10 @@ public class Payment {
         this.paidAt = LocalDateTime.now();
     }
 
+    public void addItem(Long courseId, int amount) {
+        items.add(PaymentItem.create(this, courseId, amount));
+    }
+
     public void cancel() {
         this.status = PaymentStatus.CANCELLED;
     }
