@@ -12,6 +12,7 @@ public class CourseDetailResponse {
     private final String title;
     private final String description;
     private final Long instructorId;
+    private final String instructorName;
     private final Integer price;
     private final Double ratingAvg;
     private final Integer studentCount;
@@ -20,17 +21,18 @@ public class CourseDetailResponse {
     private final String status;
     private final List<LessonSummary> lessons;
 
-    public CourseDetailResponse(Course course) {
+    public CourseDetailResponse(Course course, String instructorName) {
         this.courseId = course.getId();
         this.title = course.getTitle();
         this.description = course.getDescription();
         this.instructorId = course.getInstructorId();
+        this.instructorName = instructorName;
         this.price = course.getPrice();
         this.ratingAvg = course.getRatingAvg();
         this.studentCount = course.getStudentCount();
         this.createdAt = course.getCreatedAt().toLocalDate();
         this.thumbnailUrl = course.getThumbnailUrl() != null
-                ? "http://localhost:8080/uploads/" + course.getThumbnailUrl()
+                ? "/api/courses/" + course.getId() + "/thumbnail"
                 : null;
         this.status = course.getStatus().name();
         this.lessons = course.getLessons().stream().map(LessonSummary::new).toList();

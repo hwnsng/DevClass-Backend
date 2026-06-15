@@ -189,6 +189,6 @@ public class AdminController {
 
     @GetMapping("/courses")
     public ResponseEntity<List<CourseListResponse>> getCourses() {
-        return ResponseEntity.ok(courseRepository.findAll().stream().map(CourseListResponse::new).toList());
+        return ResponseEntity.ok(courseRepository.findAll().stream().map(courseService::toListResponse).toList());
     }
 }

@@ -6,6 +6,7 @@ import com.hwnsng.devclass.course.entity.Course;
 import com.hwnsng.devclass.course.repository.CourseRepository;
 import com.hwnsng.devclass.lesson.service.FileStorageService;
 import com.hwnsng.devclass.subscription.service.SubscriptionService;
+import com.hwnsng.devclass.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -25,6 +26,7 @@ public class CourseService {
 
     private final CourseRepository courseRepository;
     private final FileStorageService fileStorageService;
+    private final UserRepository userRepository;
     @Lazy
     private final SubscriptionService subscriptionService;
 
@@ -53,13 +55,13 @@ public class CourseService {
                     pageable);
         }
 
-        return courses.map(CourseListResponse::new);
+        return courses.map(this::toListResponse);
     }
 
     public CourseDetailResponse getCourse(Long courseId) {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "NOT_FOUND", "존재하지 않는 강의입니다."));
-        return new CourseDetailResponse(course);
+        return toDetailResponse(course);
     }
 
     @Transactional
@@ -76,7 +78,7 @@ public class CourseService {
         // 구독자 알림 (비동기)
         subscriptionService.notifyNewCourse(request.getInstructorId(), course.getId(), course.getTitle());
 
-        return new CourseDetailResponse(course);
+        return toDetailResponse(course);
     }
 
     @Transactional
@@ -84,7 +86,7 @@ public class CourseService {
         Course course = courseRepository.findById(courseId)
                 .orElseThrow(() -> new CustomException(HttpStatus.NOT_FOUND, "NOT_FOUND", "존재하지 않는 강의입니다."));
         course.update(request.getTitle(), request.getDescription(), request.getPrice());
-        return new CourseDetailResponse(course);
+        return toDetailResponse(course);
     }
 
     @Transactional
@@ -99,7 +101,21 @@ public class CourseService {
 
         String relativePath = fileStorageService.storeThumbnail(file, courseId);
         course.updateThumbnail(relativePath);
-        return new CourseDetailResponse(course);
+        return toDetailResponse(course);
+    }
+
+    public CourseListResponse toListResponse(Course course) {
+        return new CourseListResponse(course, findInstructorName(course.getInstructorId()));
+    }
+
+    private CourseDetailResponse toDetailResponse(Course course) {
+        return new CourseDetailResponse(course, findInstructorName(course.getInstructorId()));
+    }
+
+    private String findInstructorName(Long instructorId) {
+        return userRepository.findById(instructorId)
+                .map(user -> user.getName())
+                .orElse("알 수 없는 강사");
     }
 
     public Resource getThumbnailResource(Long courseId) {
