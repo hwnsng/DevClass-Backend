@@ -41,7 +41,7 @@ public class Progress {
     }
 
     public void update(Integer percent, Long lastLessonId) {
-        this.percent = percent;
+        this.percent = Math.max(this.percent, percent);
         this.lastLessonId = lastLessonId;
     }
 
