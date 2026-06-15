@@ -6,6 +6,8 @@ import com.hwnsng.devclass.cart.repository.CartItemRepository;
 import com.hwnsng.devclass.common.exception.CustomException;
 import com.hwnsng.devclass.course.entity.Course;
 import com.hwnsng.devclass.course.repository.CourseRepository;
+import com.hwnsng.devclass.enrollment.entity.Enrollment;
+import com.hwnsng.devclass.enrollment.repository.EnrollmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,6 +22,7 @@ public class CartService {
 
     private final CartItemRepository cartItemRepository;
     private final CourseRepository   courseRepository;
+    private final EnrollmentRepository enrollmentRepository;
 
     public List<CartItemResponse> getCart(Long userId) {
         return cartItemRepository.findByUserId(userId).stream()
@@ -37,6 +40,12 @@ public class CartService {
         courseRepository.findById(courseId)
                 .orElseThrow(() -> new CustomException(
                         HttpStatus.NOT_FOUND, "NOT_FOUND", "존재하지 않는 강의입니다."));
+
+        if (enrollmentRepository.existsByUserIdAndCourseIdAndStatus(
+                userId, courseId, Enrollment.EnrollmentStatus.ENROLLED)) {
+            throw new CustomException(
+                    HttpStatus.CONFLICT, "ALREADY_ENROLLED", "이미 수강 중인 강의입니다.");
+        }
 
         if (cartItemRepository.existsByUserIdAndCourseId(userId, courseId)) {
             throw new CustomException(
