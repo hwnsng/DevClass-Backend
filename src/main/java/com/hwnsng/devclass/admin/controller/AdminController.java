@@ -98,6 +98,7 @@ public class AdminController {
                                             item.getAmount()
                                     );
                                     item.refund("관리자 강의 삭제: " + reason);
+                                    paymentItemRepository.save(item);
                                     emailService.sendRefundNotification(
                                             user.getEmail(), user.getName(), finalTitle, item.getAmount());
                                     log.info("Refund processed for userId={} courseId={} amount={}",
